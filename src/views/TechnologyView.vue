@@ -11,7 +11,6 @@
     :mainHeadline="mainHeadline"
     :otherArticles="otherArticles"
     :getNews="getNews"
-    v-model="searchTerm"
   ></Layout>
 </template>
 
@@ -21,7 +20,7 @@ import { mapActions, mapGetters } from 'vuex';
 import Layout from '@/components/Layout.vue';
 
 export default {
-  name: 'HomeView',
+  name: 'TechnologyView',
   components: { Layout },
   data() {
     return {
@@ -30,37 +29,25 @@ export default {
     };
   },
   async created() {
-    await this.fetchGlobalNews();
+    await this.fetchNews(this.$route.name);
   },
   methods: {
     ...mapActions({
-      fetchGlobalNews: 'fetchGlobalNews',
-      // fetchAllNews: 'fetchAllNews',
+      fetchNews: 'fetchNewsByCategory',
     }),
-
     getNews() {
-      console.log(this.searchTerm);
-      this.$router.push({
-        name: 'search',
-        params: { name: this.searchTerm },
-      });
+      this.$router.push({ name: 'search', params: { name: this.searchTerm } });
     },
-
-    // getDate(rawDate) {
-    //   let date = new Date(rawDate);
-    //   let datestr = date.toString();
-    //   datestr.slice(4, 16);
-    // },
   },
   computed: {
     ...mapGetters({
-      globalNews: 'getGlobalNews',
+      news: 'getNewsByCategory',
     }),
     mainHeadline() {
-      return this.globalNews.articles[0];
+      return this.news.articles[0];
     },
     otherArticles() {
-      return this.globalNews.articles.slice(1, 10);
+      return this.news.articles.slice(1, 10);
     },
   },
 };
